@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="10dp">
+
+    <ImageView
+        android:id="@+id/imageview"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:id="@+id/price_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imageview"
+        android:text="$20"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/price_textview"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/price_textview"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="Name"
+        android:textSize="18sp" />
+
+    <RatingBar
+        android:id="@+id/rating_stars"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/price_textview"
+        android:layout_below="@id/name_textview"
+        android:numStars="5" />
+
+    <TextView
+        android:id="@+id/rating_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/rating_stars"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/rating_stars"
+        android:gravity="center_horizontal|top"
+        android:maxWidth="40dp"
+        android:text="1000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/outofstock_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/price_textview"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/rating_stars"
+        android:text="Out of Stock"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="14sp" />
+</RelativeLayout>
