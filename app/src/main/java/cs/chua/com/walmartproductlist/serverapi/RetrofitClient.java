@@ -7,13 +7,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by christopherchua on 10/3/17.
+ * Created by christopherchua on 10/5/17.
  */
 
 public class RetrofitClient {
-    Retrofit retrofit = null ;
+    Retrofit retrofit = null;
 
-    private RetrofitClient(){}
+    private RetrofitClient() {
+    }
 
     private static class SingletonHelper {
         private static final RetrofitClient INSTANCE = new RetrofitClient();
@@ -28,8 +29,7 @@ public class RetrofitClient {
             final Retrofit.Builder builder = new Retrofit.Builder();
             builder.baseUrl(baseUrl);
 
-            final Gson gson = new GsonBuilder()
-                    .create();
+            final Gson gson = new GsonBuilder().create();
             builder.addConverterFactory(GsonConverterFactory.create(gson));
             retrofit = builder.build();
         }
