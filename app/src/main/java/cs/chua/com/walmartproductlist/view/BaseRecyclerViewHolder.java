@@ -3,11 +3,18 @@ package cs.chua.com.walmartproductlist.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+/**
+ * Created by christopherchua on 10/6/17.
+ */
+
+public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+        View.OnLongClickListener {
+
     private ItemClickListener itemClickListener;
 
-    public BaseViewHolder(View itemView) {
+    public BaseRecyclerViewHolder(View itemView) {
         super(itemView);
+        itemView.setOnClickListener(this);
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
