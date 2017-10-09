@@ -1,12 +1,51 @@
 package cs.chua.com.walmartproductlist.model.remote;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
- * Created by christopherchua on 10/3/17.
+ * Created by christopherchua on 10/5/17.
  */
 
-public class Product {
+public class Product implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Product createFromParcel(final Parcel in) {
+            return new Product(in);
+        }
+
+        public Product[] newArray(final int size) {
+            return new Product[size];
+        }
+    };
+
+    public Product() {
+        // fake data, can be used in pagination or testing
+        productId = "";
+        productName = "";
+        shortDescription = "";
+        longDescription = "";
+        price = "";
+        productImage = "";
+        reviewRating = 0d;
+        reviewCount = 0;
+        inStock = true;
+    }
+
+    public Product(final Parcel in) {
+        productId = in.readString();
+        productName = in.readString();
+        shortDescription = in.readString();
+        longDescription = in.readString();
+        price = in.readString();
+        productImage = in.readString();
+        reviewRating = in.readDouble();
+        reviewCount = in.readInt();
+        inStock = in.readByte() != 0;
+    }
 
     @SerializedName("productId")
     @Expose
@@ -36,19 +75,19 @@ public class Product {
     @Expose
     private Boolean inStock;
 
-    public String getProductId() {
+    public String getId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setId(String productId) {
         this.productId = productId;
     }
 
-    public String getProductName() {
+    public String getName() {
         return productName;
     }
 
-    public void setProductName(String productName) {
+    public void setName(String productName) {
         this.productName = productName;
     }
 
@@ -76,11 +115,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getProductImage() {
+    public String getImage() {
         return productImage;
     }
 
-    public void setProductImage(String productImage) {
+    public void setImage(String productImage) {
         this.productImage = productImage;
     }
 
@@ -106,5 +145,23 @@ public class Product {
 
     public void setInStock(Boolean inStock) {
         this.inStock = inStock;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(productId);
+        dest.writeString(productName);
+        dest.writeString(shortDescription);
+        dest.writeString(longDescription);
+        dest.writeString(price);
+        dest.writeString(productImage);
+        dest.writeDouble(reviewRating);
+        dest.writeInt(reviewCount);
+        dest.writeByte((byte) (inStock ? 1 : 0));
     }
 }

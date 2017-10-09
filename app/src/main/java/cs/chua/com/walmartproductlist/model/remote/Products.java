@@ -3,16 +3,16 @@ package cs.chua.com.walmartproductlist.model.remote;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Created by christopherchua on 10/3/17.
+ * Created by christopherchua on 10/5/17.
  */
 
 public class Products {
     @SerializedName("products")
     @Expose
-    private List<Product> products = null;
+    private ArrayList<Product> products = null;
     @SerializedName("totalProducts")
     @Expose
     private Integer totalProducts;
@@ -32,11 +32,11 @@ public class Products {
     @Expose
     private String etag;
 
-    public List<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
 
