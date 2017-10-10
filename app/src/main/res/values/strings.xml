@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WalmartProductList</string>
+    <string name="out_of_stock">Out of Stock</string>
 </resources>

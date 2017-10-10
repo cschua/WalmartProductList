@@ -19,7 +19,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/imageview"
-        android:text="$20"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -32,7 +31,6 @@
         android:layout_below="@+id/price_textview"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="Name"
         android:textSize="18sp" />
 
     <RatingBar
@@ -53,7 +51,6 @@
         android:layout_toRightOf="@id/rating_stars"
         android:gravity="center_horizontal|top"
         android:maxWidth="40dp"
-        android:text="1000"
         android:textSize="12sp" />
 
     <TextView
@@ -63,7 +60,7 @@
         android:layout_alignLeft="@id/price_textview"
         android:layout_alignParentRight="true"
         android:layout_below="@id/rating_stars"
-        android:text="Out of Stock"
+        android:text="@string/out_of_stock"
         android:textColor="@android:color/holo_red_light"
         android:textSize="14sp" />
 </RelativeLayout>
