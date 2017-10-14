@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.product.ProductSlideScreenActivity"
+        <activity android:name=".controller.ProductSlideScreenActivity"
             android:parentActivityName=".controller.MainActivity"/>
     </application>
 
