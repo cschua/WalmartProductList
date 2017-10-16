@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cs.chua.com.walmartproductlist.R;
@@ -215,10 +214,6 @@ public abstract class ProductBaseFragment extends Fragment {
         // adapter needs scrollListner to update the progress view at the end of the list and to
         // update the pagination when the list of items are modified in size
         productListAdapter.setPaginationScrollListener(paginationScrollListener);
-    }
-
-    public List<Product> getProductList() {
-        return new ArrayList<>(productListAdapter.getProductList());
     }
 
     public int getTotalPagesLoaded() {

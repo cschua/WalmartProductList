@@ -27,7 +27,7 @@ public class ProductPagerAdapter extends ProductBaseAdapter {
     }
 
     @Override
-    public void populateProductItem(final Product product, final ProductViewHolder holder) {
+    protected void populateProductItem(final Product product, final ProductViewHolder holder) {
         holder.itemView.scrollTo(0, 0); // reset scroll position
         super.populateProductItem(product, holder);
         final Spanned shortDescription = FormatUtil.fromHtml(product.getShortDescription());

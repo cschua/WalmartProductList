@@ -67,7 +67,7 @@ public abstract class ProductBaseAdapter extends RecyclerView.Adapter<ProductVie
         }
     }
 
-    public void populateProductItem(final Product product, final ProductViewHolder holder) {
+    protected void populateProductItem(final Product product, final ProductViewHolder holder) {
         GlideApp.with(holder.imageView.getContext())
                 .load(product.getImage())
                 .centerCrop()
@@ -106,16 +106,6 @@ public abstract class ProductBaseAdapter extends RecyclerView.Adapter<ProductVie
 
     public void onDestroy() {
         paginationScrollListener = null;
-    }
-
-    public List<Product> getProductList() {
-        final List<Product> list = new ArrayList<>(this.productList);
-        // clean up last item, which is an item for the progress used in pagination
-        final int index = list.size() - 1;
-        if (isLoadingAdded && list.get(index) == null) {
-            list.remove(index);
-        }
-        return list;
     }
 
     public void setPaginationScrollListener(final PaginationScrollListener onScrollListener) {
