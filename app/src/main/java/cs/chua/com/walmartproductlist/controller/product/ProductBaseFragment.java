@@ -142,9 +142,9 @@ public abstract class ProductBaseFragment extends Fragment {
             return false;
         }
         if (currentIndex > defaultPosition) {
-            productsRecyclerView.scrollToPosition(currentIndex - 1);
+            productsRecyclerView.smoothScrollToPosition(currentIndex - 1);
         } else {
-            productsRecyclerView.scrollToPosition(currentIndex + 1);
+            productsRecyclerView.smoothScrollToPosition(currentIndex + 1);
         }
         return true;
     }
