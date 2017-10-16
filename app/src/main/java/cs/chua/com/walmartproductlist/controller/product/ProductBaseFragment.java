@@ -86,8 +86,9 @@ public abstract class ProductBaseFragment extends Fragment {
             }
             isLoadingAdded = false;
         } else {
-            isLoadingAdded = savedInstanceState.getBoolean(ARGS_LOADING_ADDED, false);
+            defaultPosition = savedInstanceState.getInt(ARGS_DEFAULT_POSITION, 0);
             totalPagesLoaded = savedInstanceState.getInt(ARGS_TOTAL_PAGE_LOADED, 1);
+            isLoadingAdded = savedInstanceState.getBoolean(ARGS_LOADING_ADDED, false);
         }
 
         productListAdapter = getAdapter(isLoadingAdded);
@@ -110,6 +111,7 @@ public abstract class ProductBaseFragment extends Fragment {
         if (paginationScrollListener != null) {
             outState.putInt(ARGS_TOTAL_PAGE_LOADED, paginationScrollListener.getTotalPagesLoaded());
         }
+        outState.putInt(ARGS_DEFAULT_POSITION, defaultPosition);
         super.onSaveInstanceState(outState);
     }
 
