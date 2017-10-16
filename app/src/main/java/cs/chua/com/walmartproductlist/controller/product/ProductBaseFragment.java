@@ -54,7 +54,7 @@ public abstract class ProductBaseFragment extends Fragment {
     private PaginationScrollListener paginationScrollListener;
 
     private int defaultPosition = 0;
-    private int currentPage = 1;
+    private int totalPagesLoaded = 1;
 
     public ProductBaseFragment() {}
 
@@ -81,12 +81,13 @@ public abstract class ProductBaseFragment extends Fragment {
         if (savedInstanceState == null) {
             final Bundle bundle = getArguments();
             if (bundle != null) {
-                defaultPosition = bundle.getInt(ARGS_DEFAULT_POSITION);
+                defaultPosition = bundle.getInt(ARGS_DEFAULT_POSITION, 0);
+                totalPagesLoaded = bundle.getInt(ARGS_TOTAL_PAGE_LOADED, 1);
             }
             isLoadingAdded = false;
         } else {
             isLoadingAdded = savedInstanceState.getBoolean(ARGS_LOADING_ADDED, false);
-            currentPage = savedInstanceState.getInt(ARGS_TOTAL_PAGE_LOADED, 1);
+            totalPagesLoaded = savedInstanceState.getInt(ARGS_TOTAL_PAGE_LOADED, 1);
         }
 
         productListAdapter = getAdapter(isLoadingAdded);
@@ -94,7 +95,7 @@ public abstract class ProductBaseFragment extends Fragment {
 
         // only send a server call if we don't already have a list from the saveInstanceState
         if (productList == null || productList.size() == 0) {
-            sendGetProductsCommand(currentPage, PaginationCount.TOTAL_ITEMS_PER_PAGE);
+            sendGetProductsCommand(totalPagesLoaded, PaginationCount.TOTAL_ITEMS_PER_PAGE);
         } else {
             productsRecyclerView.scrollToPosition(defaultPosition);
             updateProductsAdapter(productList);
@@ -195,7 +196,7 @@ public abstract class ProductBaseFragment extends Fragment {
 
         if (paginationScrollListener == null) {
             paginationScrollListener = new PaginationScrollListener(layoutManager,
-                    productPageCount.getTotalPages(), currentPage) {
+                    productPageCount.getTotalPages(), totalPagesLoaded) {
                 @Override
                 protected void loadMoreItems(final int currentPage) {
                     sendGetProductsCommand(currentPage,
@@ -212,5 +213,12 @@ public abstract class ProductBaseFragment extends Fragment {
 
     public List<Product> getProductList() {
         return new ArrayList<>(productListAdapter.getProductList());
+    }
+
+    public int getTotalPagesLoaded() {
+        if (paginationScrollListener == null) {
+            return 1;
+        }
+        return paginationScrollListener.getTotalPagesLoaded();
     }
 }

@@ -8,13 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.ArrayList;
-
 import cs.chua.com.walmartproductlist.R;
 import cs.chua.com.walmartproductlist.controller.product.ProductBaseFragment;
 import cs.chua.com.walmartproductlist.controller.product.ProductPagerFragment;
-import cs.chua.com.walmartproductlist.model.local.ApplicationModel;
-import cs.chua.com.walmartproductlist.model.remote.Product;
 
 /**
  * Created by christopherchua on 10/6/17.
@@ -22,7 +18,8 @@ import cs.chua.com.walmartproductlist.model.remote.Product;
 
 public class ProductSlideScreenActivity extends AppCompatActivity {
     private static final String TAG = ProductSlideScreenActivity.class.getSimpleName();
-    public static final String INTENT_EXTRA_DEFAULT_POSITION = "extradefaultposition";
+    public static final String INTENT_EXTRA_DEFAULT_POSITION = "extraDefaultPosition";
+    public static final String INTENT_EXTRA_TOTAL_PAGE_LOADED = "extraTotalPageLoaded";
     private ProductPagerFragment productListFragment;
 
     @Override
@@ -32,14 +29,9 @@ public class ProductSlideScreenActivity extends AppCompatActivity {
         setContentView(R.layout.product_slide_screen_layout);
         Log.d(TAG, "setContentView");
         final Intent intent = getIntent();
-        final ArrayList<Product> productList = ApplicationModel.getInstance().getProducts();
-        if (productList == null || productList.size() == 0) {
-            // TODO refresh or show error?
-            Log.d(TAG, "Empty product list");
-            return;
-        }
         final int defaultPosition = intent.getIntExtra(INTENT_EXTRA_DEFAULT_POSITION, 0);
-        showProductPagerScreen(productList, defaultPosition);
+        final int totalPageLoaded = intent.getIntExtra(INTENT_EXTRA_TOTAL_PAGE_LOADED, 1);
+        showProductPagerScreen(defaultPosition, totalPageLoaded);
     }
 
     @Override
@@ -51,12 +43,12 @@ public class ProductSlideScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void showProductPagerScreen(final ArrayList<Product> productList, final int defaultPosition) {
+    private void showProductPagerScreen(final int defaultPosition, final int totalPageLoaded) {
         final FragmentManager fm = getSupportFragmentManager();
         final Fragment fragment = fm.findFragmentByTag(ProductBaseFragment.TAG);
         if (fragment == null) {
             Log.d(TAG, "create and show ProductBaseFragment");
-            productListFragment = ProductPagerFragment.newInstance(defaultPosition);
+            productListFragment = ProductPagerFragment.newInstance(defaultPosition, totalPageLoaded);
             final FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.product_list_framelayout, productListFragment, ProductBaseFragment.TAG);
             ft.commit();

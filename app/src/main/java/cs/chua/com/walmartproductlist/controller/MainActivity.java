@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
         if (productListFragment != null) {
             final Intent intent = new Intent(this, ProductSlideScreenActivity.class);
             intent.putExtra(ProductSlideScreenActivity.INTENT_EXTRA_DEFAULT_POSITION, position);
+            intent.putExtra(ProductSlideScreenActivity.INTENT_EXTRA_TOTAL_PAGE_LOADED, productListFragment.getTotalPagesLoaded());
             startActivity(intent);
         }
     }

@@ -18,10 +18,11 @@ public class ProductPagerFragment extends ProductBaseFragment {
 
     public ProductPagerFragment(){}
 
-    public static ProductPagerFragment newInstance(final int defaultPosition) {
+    public static ProductPagerFragment newInstance(final int defaultPosition, final int totalPagesLoaded) {
         final ProductPagerFragment fragment = new ProductPagerFragment();
         final Bundle bundle = new Bundle();
         bundle.putInt(ARGS_DEFAULT_POSITION, defaultPosition);
+        bundle.putInt(ARGS_TOTAL_PAGE_LOADED, totalPagesLoaded);
         fragment.setArguments(bundle);
         return fragment;
     }
