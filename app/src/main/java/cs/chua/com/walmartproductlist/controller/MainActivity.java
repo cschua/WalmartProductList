@@ -15,7 +15,7 @@ import cs.chua.com.walmartproductlist.R;
 import cs.chua.com.walmartproductlist.controller.product.ProductBaseFragment;
 import cs.chua.com.walmartproductlist.controller.product.ProductListFragment;
 import cs.chua.com.walmartproductlist.controller.product.adapter.ProductListAdapter;
-import cs.chua.com.walmartproductlist.model.local.PaginationPageCount;
+import cs.chua.com.walmartproductlist.model.local.PaginationCount;
 import cs.chua.com.walmartproductlist.model.remote.Product;
 
 public class MainActivity extends AppCompatActivity
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity
 
             // we will limit pageviews to 30 items starting from the middle of the list if possible
             List<Product> productList = productListFragment.getProductList();
-            final int leftIndex = Math.max(position - PaginationPageCount.TOTAL_ITEMS_PER_PAGE/2, 0);
-            final int rightIndex = Math.min(leftIndex + PaginationPageCount.TOTAL_ITEMS_PER_PAGE, productList.size()-1);
+            final int leftIndex = Math.max(position - PaginationCount.TOTAL_ITEMS_PER_PAGE/2, 0);
+            final int rightIndex = Math.min(leftIndex + PaginationCount.TOTAL_ITEMS_PER_PAGE, productList.size()-1);
             productList = productList.subList(leftIndex, rightIndex);
             position = Math.min(position, 15);
 
