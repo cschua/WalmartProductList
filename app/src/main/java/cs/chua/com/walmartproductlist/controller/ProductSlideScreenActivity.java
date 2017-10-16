@@ -56,7 +56,7 @@ public class ProductSlideScreenActivity extends AppCompatActivity {
         final Fragment fragment = fm.findFragmentByTag(ProductBaseFragment.TAG);
         if (fragment == null) {
             Log.d(TAG, "create and show ProductBaseFragment");
-            productListFragment = ProductPagerFragment.newInstance(defaultPosition, productList);
+            productListFragment = ProductPagerFragment.newInstance(defaultPosition);
             final FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.product_list_framelayout, productListFragment, ProductBaseFragment.TAG);
             ft.commit();

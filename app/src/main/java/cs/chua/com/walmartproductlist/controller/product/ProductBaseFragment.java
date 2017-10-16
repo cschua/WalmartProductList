@@ -2,7 +2,6 @@ package cs.chua.com.walmartproductlist.controller.product;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import java.util.List;
 
 import cs.chua.com.walmartproductlist.R;
 import cs.chua.com.walmartproductlist.controller.product.adapter.ProductBaseAdapter;
+import cs.chua.com.walmartproductlist.model.local.ApplicationModel;
 import cs.chua.com.walmartproductlist.model.local.PaginationCount;
 import cs.chua.com.walmartproductlist.model.remote.Product;
 import cs.chua.com.walmartproductlist.model.remote.Products;
@@ -37,9 +37,6 @@ public abstract class ProductBaseFragment extends Fragment {
 
     public final static String TAG = ProductBaseFragment.class.getSimpleName();
     public static final String ARGS_DEFAULT_POSITION = "argDefaultPosition";
-    public final static String ARGS_PRODUCTS = "argProductlist";
-    // the server's total product count
-    public final static String ARGS_TOTAL_PRODUCTS = "argTotalProducts";
     // used in pagination
     public final static String ARGS_TOTAL_PAGE_LOADED = "argCurrentState";
     // used in the adapter for adding pagination support
@@ -57,7 +54,6 @@ public abstract class ProductBaseFragment extends Fragment {
     private PaginationScrollListener paginationScrollListener;
 
     private int defaultPosition = 0;
-    private int totalProducts = 0;
     private int currentPage = 1;
 
     public ProductBaseFragment() {}
@@ -81,17 +77,14 @@ public abstract class ProductBaseFragment extends Fragment {
         retrofitService = ServerAPIUtil.getProductList();
 
         final boolean isLoadingAdded;
-        List<Product> productList = null;
+        final List<Product> productList = ApplicationModel.getInstance().getProducts();
         if (savedInstanceState == null) {
             final Bundle bundle = getArguments();
             if (bundle != null) {
                 defaultPosition = bundle.getInt(ARGS_DEFAULT_POSITION);
-                productList = bundle.getParcelableArrayList(ARGS_PRODUCTS);
             }
             isLoadingAdded = false;
         } else {
-            productList = savedInstanceState.getParcelableArrayList(ARGS_PRODUCTS);
-            totalProducts = savedInstanceState.getInt(ARGS_TOTAL_PRODUCTS, 0);
             isLoadingAdded = savedInstanceState.getBoolean(ARGS_LOADING_ADDED, false);
             currentPage = savedInstanceState.getInt(ARGS_TOTAL_PAGE_LOADED, 1);
         }
@@ -104,16 +97,13 @@ public abstract class ProductBaseFragment extends Fragment {
             sendGetProductsCommand(currentPage, PaginationCount.TOTAL_ITEMS_PER_PAGE);
         } else {
             productsRecyclerView.scrollToPosition(defaultPosition);
-            updateProductsAdapter(totalProducts, productList);
+            updateProductsAdapter(productList);
         }
     }
 
     @Override
     public void onSaveInstanceState(final Bundle outState){
-        outState.putInt(ARGS_TOTAL_PRODUCTS, totalProducts);
         if (productListAdapter != null) {
-            outState.putParcelableArrayList(ARGS_PRODUCTS,
-                    new ArrayList<Parcelable>(productListAdapter.getProductList()));
             outState.putBoolean(ARGS_LOADING_ADDED, productListAdapter.isLoadingAdded());
         }
         if (paginationScrollListener != null) {
@@ -162,7 +152,10 @@ public abstract class ProductBaseFragment extends Fragment {
                 }
                 if (response.isSuccessful()) {
                     final Products products = response.body();
-                    updateProductsAdapter(products.getTotalProducts(), products.getProducts());
+                    final List<Product> productList = products.getProducts();
+                    ApplicationModel.getInstance().addToProductList(productList);
+                    ApplicationModel.getInstance().updatePaginationCount(products.getTotalProducts());
+                    updateProductsAdapter(productList);
                 } else {
                     // TODO handle error
                 }
@@ -184,21 +177,18 @@ public abstract class ProductBaseFragment extends Fragment {
         retrofitCall.enqueue(serverCallback);
     }
 
-    private void updateProductsAdapter(final int totalProducts,
-                                       final List<Product> productList) {
+    private void updateProductsAdapter(final List<Product> productList) {
         final Activity activity = getActivity();
         if (activity == null || activity.isFinishing()) {
             return;
         }
-        updatePagination(totalProducts);
+        updatePagination();
         productListAdapter.updateList(productList);
         productListAdapter.notifyDataSetChanged();
     }
 
-    private void updatePagination(final int totalProducts) {
-        this.totalProducts = totalProducts;
-
-        final PaginationCount productPageCount = new PaginationCount(totalProducts);
+    private void updatePagination() {
+        final PaginationCount productPageCount = ApplicationModel.getInstance().getPaginationCount();
         if (productPageCount == null) {
             return;
         }
