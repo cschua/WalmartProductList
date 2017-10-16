@@ -195,7 +195,7 @@ public abstract class ProductBaseFragment extends Fragment {
 
         if (paginationScrollListener == null) {
             paginationScrollListener = new PaginationScrollListener(layoutManager,
-                    productPageCount.getTotalPagination(), currentPage) {
+                    productPageCount.getTotalPages(), currentPage) {
                 @Override
                 protected void loadMoreItems(final int currentPage) {
                     sendGetProductsCommand(currentPage,

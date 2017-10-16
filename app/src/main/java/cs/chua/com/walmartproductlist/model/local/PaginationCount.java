@@ -10,8 +10,8 @@ import android.os.Parcelable;
 public class PaginationCount implements Parcelable {
     public final static int TOTAL_ITEMS_PER_PAGE = 30; // better if this is from the server
     private final int totalItems;
-    private final int totalPagination;
-    private final int lastPaginationCount;
+    private final int totalPages;
+    private final int lastPageItemCount;
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public PaginationCount createFromParcel(Parcel in) {
@@ -28,9 +28,9 @@ public class PaginationCount implements Parcelable {
     }
 
     public PaginationCount(final int totalItems) {
-        this.totalItems = totalItems; // total products from the server
-        totalPagination = totalItems / TOTAL_ITEMS_PER_PAGE;
-        lastPaginationCount = totalItems % TOTAL_ITEMS_PER_PAGE;
+        this.totalItems = totalItems; // total items from the server
+        totalPages = totalItems / TOTAL_ITEMS_PER_PAGE;
+        lastPageItemCount = totalItems % TOTAL_ITEMS_PER_PAGE;
     }
 
     @Override
@@ -43,21 +43,21 @@ public class PaginationCount implements Parcelable {
         dest.writeInt(totalItems);
     }
 
-    public int getTotalPagination() {
-        // lastPaginationCount means we need to add another page for the remaining items
-        return lastPaginationCount > 0 ? totalPagination + 1 : totalPagination;
+    public int getTotalPages() {
+        // lastPageItemCount means we need to add another page for the remaining items
+        return lastPageItemCount > 0 ? totalPages + 1 : totalPages;
     }
 
     public int getItemsCountForPage(final int pageNumber) {
-        if (pageNumber == getTotalPagination()) {
-            return getLastPaginationCount();
+        if (pageNumber == getTotalPages()) {
+            return getLastPageItemCount();
         }
         return TOTAL_ITEMS_PER_PAGE;
     }
 
-    private int getLastPaginationCount() {
-        // totalPagination might not be a perfect divisible of TOTAL_ITEMS_PER_PAGE, therefore
-        // lastPaginationCount may contain the remainder count
-        return lastPaginationCount > 0 ? lastPaginationCount : TOTAL_ITEMS_PER_PAGE;
+    private int getLastPageItemCount() {
+        // totalPages might not be a perfect divisible of TOTAL_ITEMS_PER_PAGE, therefore
+        // lastPageItemCount may contain the remainder count
+        return lastPageItemCount > 0 ? lastPageItemCount : TOTAL_ITEMS_PER_PAGE;
     }
 }
