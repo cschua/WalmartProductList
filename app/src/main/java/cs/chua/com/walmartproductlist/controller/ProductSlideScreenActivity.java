@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import cs.chua.com.walmartproductlist.R;
 import cs.chua.com.walmartproductlist.controller.product.ProductBaseFragment;
 import cs.chua.com.walmartproductlist.controller.product.ProductPagerFragment;
+import cs.chua.com.walmartproductlist.model.local.ApplicationModel;
 import cs.chua.com.walmartproductlist.model.remote.Product;
 
 /**
@@ -21,7 +22,6 @@ import cs.chua.com.walmartproductlist.model.remote.Product;
 
 public class ProductSlideScreenActivity extends AppCompatActivity {
     private static final String TAG = ProductSlideScreenActivity.class.getSimpleName();
-    public static final String INTENT_EXTRA_PRODUCTS = "extraproducts";
     public static final String INTENT_EXTRA_DEFAULT_POSITION = "extradefaultposition";
     private ProductPagerFragment productListFragment;
 
@@ -32,7 +32,7 @@ public class ProductSlideScreenActivity extends AppCompatActivity {
         setContentView(R.layout.product_slide_screen_layout);
         Log.d(TAG, "setContentView");
         final Intent intent = getIntent();
-        final ArrayList<Product> productList = intent.getParcelableArrayListExtra(INTENT_EXTRA_PRODUCTS);
+        final ArrayList<Product> productList = ApplicationModel.getInstance().getProducts();
         if (productList == null || productList.size() == 0) {
             // TODO refresh or show error?
             Log.d(TAG, "Empty product list");

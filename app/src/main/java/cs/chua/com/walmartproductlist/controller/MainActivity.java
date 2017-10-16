@@ -8,15 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cs.chua.com.walmartproductlist.R;
 import cs.chua.com.walmartproductlist.controller.product.ProductBaseFragment;
 import cs.chua.com.walmartproductlist.controller.product.ProductListFragment;
 import cs.chua.com.walmartproductlist.controller.product.adapter.ProductListAdapter;
-import cs.chua.com.walmartproductlist.model.local.PaginationCount;
-import cs.chua.com.walmartproductlist.model.remote.Product;
 
 public class MainActivity extends AppCompatActivity
         implements ProductListAdapter.OnProductItemListener {
@@ -37,15 +32,6 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onProductListAdapterClick " + position);
         if (productListFragment != null) {
             final Intent intent = new Intent(this, ProductSlideScreenActivity.class);
-
-            // we will limit pageviews to 30 items starting from the middle of the list if possible
-            List<Product> productList = productListFragment.getProductList();
-            final int leftIndex = Math.max(position - PaginationCount.TOTAL_ITEMS_PER_PAGE/2, 0);
-            final int rightIndex = Math.min(leftIndex + PaginationCount.TOTAL_ITEMS_PER_PAGE, productList.size()-1);
-            productList = productList.subList(leftIndex, rightIndex);
-            position = Math.min(position, 15);
-
-            intent.putParcelableArrayListExtra(ProductSlideScreenActivity.INTENT_EXTRA_PRODUCTS, new ArrayList<>(productList));
             intent.putExtra(ProductSlideScreenActivity.INTENT_EXTRA_DEFAULT_POSITION, position);
             startActivity(intent);
         }

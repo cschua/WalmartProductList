@@ -28,7 +28,7 @@ public class PaginationCount implements Parcelable {
     }
 
     public PaginationCount(final int totalItems) {
-        this.totalItems = totalItems;
+        this.totalItems = totalItems; // total products from the server
         totalPagination = totalItems / TOTAL_ITEMS_PER_PAGE;
         lastPaginationCount = totalItems % TOTAL_ITEMS_PER_PAGE;
     }
