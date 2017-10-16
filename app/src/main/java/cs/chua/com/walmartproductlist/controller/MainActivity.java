@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
         // used in ProductListAdapter when items are clicked.  show the full detail screen
         Log.d(TAG, "onProductListAdapterClick " + position);
         if (productListFragment != null) {
+            productListFragment.updateDefaultPosition(position);
             final Intent intent = new Intent(this, ProductSlideScreenActivity.class);
             intent.putExtra(ProductSlideScreenActivity.INTENT_EXTRA_DEFAULT_POSITION, position);
             intent.putExtra(ProductSlideScreenActivity.INTENT_EXTRA_TOTAL_PAGE_LOADED, productListFragment.getTotalPagesLoaded());

@@ -77,7 +77,6 @@ public abstract class ProductBaseFragment extends Fragment {
         retrofitService = ServerAPIUtil.getProductList();
 
         final boolean isLoadingAdded;
-        final List<Product> productList = ApplicationModel.getInstance().getProducts();
         if (savedInstanceState == null) {
             final Bundle bundle = getArguments();
             if (bundle != null) {
@@ -93,7 +92,12 @@ public abstract class ProductBaseFragment extends Fragment {
 
         productListAdapter = getAdapter(isLoadingAdded);
         productsRecyclerView.setAdapter(productListAdapter);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        final List<Product> productList = ApplicationModel.getInstance().getProducts();
         // only send a server call if we don't already have a list from the saveInstanceState
         if (productList == null || productList.size() == 0) {
             sendGetProductsCommand(totalPagesLoaded, PaginationCount.TOTAL_ITEMS_PER_PAGE);
@@ -222,5 +226,9 @@ public abstract class ProductBaseFragment extends Fragment {
             return 1;
         }
         return paginationScrollListener.getTotalPagesLoaded();
+    }
+
+    public void updateDefaultPosition(final int defaultPosition) {
+        this.defaultPosition = defaultPosition;
     }
 }
