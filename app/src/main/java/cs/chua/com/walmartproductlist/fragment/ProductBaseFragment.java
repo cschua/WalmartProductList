@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.controller.product;
+package cs.chua.com.walmartproductlist.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,49 +13,44 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cs.chua.com.walmartproductlist.R;
-import cs.chua.com.walmartproductlist.controller.product.adapter.ProductBaseAdapter;
+import cs.chua.com.walmartproductlist.adapter.ProductBaseAdapter;
 import cs.chua.com.walmartproductlist.model.local.ApplicationModel;
 import cs.chua.com.walmartproductlist.model.local.PaginationCount;
 import cs.chua.com.walmartproductlist.model.remote.Product;
-import cs.chua.com.walmartproductlist.model.remote.Products;
-import cs.chua.com.walmartproductlist.serverapi.RetrofitService;
-import cs.chua.com.walmartproductlist.serverapi.ServerAPIUtil;
+import cs.chua.com.walmartproductlist.presenter.ProductScreenPresenter;
 import cs.chua.com.walmartproductlist.util.PaginationScrollListener;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import cs.chua.com.walmartproductlist.view.ProductScreenView;
 
 /**
  * Created by christopherchua on 10/7/17.
  */
 
-public abstract class ProductBaseFragment extends Fragment {
+public abstract class ProductBaseFragment extends Fragment implements ProductScreenView {
+    public final static String TAG = ProductBaseFragment.class.getSimpleName();
 
     public abstract LinearLayoutManager getLayoutManager();
     public abstract ProductBaseAdapter getAdapter(boolean isLoadingAdded);
 
-    public final static String TAG = ProductBaseFragment.class.getSimpleName();
     public static final String ARGS_DEFAULT_POSITION = "argDefaultPosition";
     // used in pagination
     public final static String ARGS_TOTAL_PAGE_LOADED = "argCurrentState";
     // used in the adapter for adding pagination support
     public final static String ARGS_LOADING_ADDED = "argLoadingAdded";
 
-    // used for server call
-    private RetrofitService retrofitService;
-    private Callback<Products> serverCallback;
-    private Call<Products> retrofitCall;
-
-    // recyclerView
+    // views
     protected RecyclerView productsRecyclerView;
     protected ProductBaseAdapter productListAdapter;
     protected LinearLayoutManager layoutManager;
+    private ProductScreenPresenter productScreenPresenter;
     private PaginationScrollListener paginationScrollListener;
 
-    private int defaultPosition = 0;
-    private int totalPagesLoaded = 1;
+    private int defaultPosition;
+    private int totalPagesLoaded;
 
-    public ProductBaseFragment() {}
+    public ProductBaseFragment() {
+        defaultPosition = 0;
+        totalPagesLoaded = 1;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +68,7 @@ public abstract class ProductBaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        retrofitService = ServerAPIUtil.getProductList();
+        productScreenPresenter = new ProductScreenPresenter(this);
 
         final boolean isLoadingAdded;
         if (savedInstanceState == null) {
@@ -99,10 +94,10 @@ public abstract class ProductBaseFragment extends Fragment {
         final List<Product> productList = ApplicationModel.getInstance().getProducts();
         // only send a server call if we don't already have a list from the saveInstanceState
         if (productList == null || productList.size() == 0) {
-            sendGetProductsCommand(totalPagesLoaded, PaginationCount.TOTAL_ITEMS_PER_PAGE);
+            productScreenPresenter.refreshProductList(totalPagesLoaded, PaginationCount.TOTAL_ITEMS_PER_PAGE);
         } else {
             productsRecyclerView.scrollToPosition(defaultPosition);
-            updateProductsAdapter(productList);
+            updateProductListView(productList);
         }
     }
 
@@ -120,15 +115,13 @@ public abstract class ProductBaseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (retrofitCall != null) {
-            retrofitCall.cancel();
+        if (productScreenPresenter != null) {
+            productScreenPresenter.onDestroy();
         }
         if (productListAdapter != null) {
             productListAdapter.onDestroy();
         }
         paginationScrollListener = null;
-        serverCallback = null;
-        retrofitService = null;
         super.onDestroy();
     }
 
@@ -145,45 +138,8 @@ public abstract class ProductBaseFragment extends Fragment {
         return true;
     }
 
-    private void sendGetProductsCommand(final int page, final int count) {
-        // show / hide loading, reuse pagination loading view
-        productListAdapter.addLoadingView();
-        // server command for getting the list of items
-        serverCallback = new Callback<Products>() {
-            @Override
-            public void onResponse(Call<Products> call, Response<Products> response) {
-                productListAdapter.removeLoadingView();
-                if (call.isCanceled()) {
-                    return;
-                }
-                if (response.isSuccessful()) {
-                    final Products products = response.body();
-                    final List<Product> productList = products.getProducts();
-                    ApplicationModel.getInstance().addToProductList(productList);
-                    ApplicationModel.getInstance().updatePaginationCount(products.getTotalProducts());
-                    updateProductsAdapter(productList);
-                } else {
-                    // TODO handle error
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Products> call, Throwable t) {
-                productListAdapter.removeLoadingView();
-                if (call.isCanceled()) {
-                    return;
-                }
-                Log.w(TAG, t.getMessage());
-                // TODO handle error
-            }
-        };
-        final String apiKey = getResources().getString(R.string.walmartlabs_api_key);
-        final String url = String.format(ServerAPIUtil.PRODUCT_LIST, apiKey, page, count);
-        retrofitCall = retrofitService.getProducts(url);
-        retrofitCall.enqueue(serverCallback);
-    }
-
-    private void updateProductsAdapter(final List<Product> productList) {
+    @Override
+    public void updateProductListView(final List<Product> productList) {
         final Activity activity = getActivity();
         if (activity == null || activity.isFinishing()) {
             return;
@@ -191,6 +147,22 @@ public abstract class ProductBaseFragment extends Fragment {
         updatePagination();
         productListAdapter.updateList(productList);
         productListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addLoadingView() {
+        productListAdapter.addLoadingView();
+    }
+
+    @Override
+    public void removeLoadingView() {
+        productListAdapter.removeLoadingView();
+    }
+
+    @Override
+    public void onError(final String error) {
+        // TODO show user error?
+        Log.w(TAG, error);
     }
 
     private void updatePagination() {
@@ -204,7 +176,7 @@ public abstract class ProductBaseFragment extends Fragment {
                     productPageCount.getTotalPages(), totalPagesLoaded) {
                 @Override
                 protected void loadMoreItems(final int currentPage) {
-                    sendGetProductsCommand(currentPage,
+                    productScreenPresenter.refreshProductList(currentPage,
                             productPageCount.getItemsCountForPage(currentPage));
                 }
             };

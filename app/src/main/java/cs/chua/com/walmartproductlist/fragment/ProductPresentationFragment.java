@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.controller.product;
+package cs.chua.com.walmartproductlist.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,18 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cs.chua.com.walmartproductlist.controller.product.adapter.ProductPagerAdapter;
+import cs.chua.com.walmartproductlist.adapter.ProductPresentationAdapter;
 
 /**
  * Created by christopherchua on 10/14/17.
  */
 
-public class ProductPagerFragment extends ProductBaseFragment {
+public class ProductPresentationFragment extends ProductBaseFragment {
 
-    public ProductPagerFragment(){}
+    public ProductPresentationFragment(){}
 
-    public static ProductPagerFragment newInstance(final int defaultPosition, final int totalPagesLoaded) {
-        final ProductPagerFragment fragment = new ProductPagerFragment();
+    public static ProductPresentationFragment newInstance(final int defaultPosition, final int totalPagesLoaded) {
+        final ProductPresentationFragment fragment = new ProductPresentationFragment();
         final Bundle bundle = new Bundle();
         bundle.putInt(ARGS_DEFAULT_POSITION, defaultPosition);
         bundle.putInt(ARGS_TOTAL_PAGE_LOADED, totalPagesLoaded);
@@ -42,7 +42,7 @@ public class ProductPagerFragment extends ProductBaseFragment {
     }
 
     @Override
-    public ProductPagerAdapter getAdapter(boolean isLoadingAdded) {
-        return new ProductPagerAdapter(getContext(), isLoadingAdded);
+    public ProductPresentationAdapter getAdapter(boolean isLoadingAdded) {
+        return new ProductPresentationAdapter(getContext(), isLoadingAdded);
     }
 }

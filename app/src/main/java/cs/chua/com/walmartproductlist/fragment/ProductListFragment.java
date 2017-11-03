@@ -1,8 +1,8 @@
-package cs.chua.com.walmartproductlist.controller.product;
+package cs.chua.com.walmartproductlist.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 
-import cs.chua.com.walmartproductlist.controller.product.adapter.ProductListAdapter;
+import cs.chua.com.walmartproductlist.adapter.ProductListAdapter;
 
 /**
  * Created by christopherchua on 10/14/17.

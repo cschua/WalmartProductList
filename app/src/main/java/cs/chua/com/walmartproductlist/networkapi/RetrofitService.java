@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.serverapi;
+package cs.chua.com.walmartproductlist.networkapi;
 
 import cs.chua.com.walmartproductlist.model.remote.Products;
 import retrofit2.Call;

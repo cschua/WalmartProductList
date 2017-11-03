@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.view;
+package cs.chua.com.walmartproductlist.view.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

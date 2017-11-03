@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.serverapi;
+package cs.chua.com.walmartproductlist.networkapi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

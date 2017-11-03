@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.controller.product.adapter;
+package cs.chua.com.walmartproductlist.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,32 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cs.chua.com.walmartproductlist.R;
-import cs.chua.com.walmartproductlist.view.BaseRecyclerViewHolder;
-import cs.chua.com.walmartproductlist.view.ProductViewHolder;
+import cs.chua.com.walmartproductlist.presenter.ProductItemPresenter;
+import cs.chua.com.walmartproductlist.view.holder.BaseRecyclerViewHolder;
 
 /**
  * Created by christopherchua on 10/5/17.
  */
 
-public class ProductListAdapter extends ProductBaseAdapter {
+public class ProductListAdapter extends ProductBaseAdapter implements BaseRecyclerViewHolder.ItemClickListener {
 
-    private BaseRecyclerViewHolder.ItemClickListener itemViewClickListener;
     private OnProductItemListener productItemListener;
 
+    public interface OnProductItemListener {
+        void onProductListAdapterClick(final int position);
+    }
+
     public ProductListAdapter(final Context context, final boolean isLoadingAdded) {
-        super(context, isLoadingAdded);
+        super(context, new ProductItemPresenter(ProductItemPresenter.MODE_LIST), isLoadingAdded);
         if (context instanceof OnProductItemListener) {
             productItemListener = (OnProductItemListener) context;
-            itemViewClickListener = new BaseRecyclerViewHolder.ItemClickListener() {
-                @Override
-                public void onClick(View view, int position, boolean isLongClick) {
-                    productItemListener.onProductListAdapterClick(position);
-                }
-            };
         } else {
             throw new ClassCastException(context.toString()
                     + " must implemenet ProductListAdapter.OnProductItemListener");
         }
+    }
+
+    @Override
+    public void onClick(View view, int position, boolean isLongClick) {
+        productItemListener.onProductListAdapterClick(position);
     }
 
     @Override
@@ -40,13 +42,12 @@ public class ProductListAdapter extends ProductBaseAdapter {
     }
 
     @Override
-    public void setViewClickListener(final ProductViewHolder holder) {
-        holder.setItemClickListener(itemViewClickListener);
+    public BaseRecyclerViewHolder.ItemClickListener getViewClickListener() {
+        return this;
     }
 
     @Override
     public void onDestroy() {
-        itemViewClickListener = null;
         productItemListener = null;
     }
 }

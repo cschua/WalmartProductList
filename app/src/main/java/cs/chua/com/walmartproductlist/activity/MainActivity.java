@@ -1,4 +1,4 @@
-package cs.chua.com.walmartproductlist.controller;
+package cs.chua.com.walmartproductlist.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import cs.chua.com.walmartproductlist.R;
-import cs.chua.com.walmartproductlist.controller.product.ProductBaseFragment;
-import cs.chua.com.walmartproductlist.controller.product.ProductListFragment;
-import cs.chua.com.walmartproductlist.controller.product.adapter.ProductListAdapter;
+import cs.chua.com.walmartproductlist.fragment.ProductBaseFragment;
+import cs.chua.com.walmartproductlist.fragment.ProductListFragment;
+import cs.chua.com.walmartproductlist.adapter.ProductListAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements ProductListAdapter.OnProductItemListener {
